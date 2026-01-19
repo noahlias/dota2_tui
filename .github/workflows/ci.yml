@@ -2,6 +2,8 @@ name: ci
 
 on:
   push:
+    tags:
+      - "v*"
   pull_request:
 
 jobs:
@@ -25,22 +27,47 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
+    if: github.ref_type == 'tag'
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
       - name: Build (release)
         run: cargo build --release
-      - name: Package
+      - name: Package (unix)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           mkdir -p dist
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            cp target/release/dota2_tui.exe dist/
-          else
-            cp target/release/dota2_tui dist/
-          fi
+          cp target/release/dota2_tui dist/
+          tar -czf "dist/dota2_tui-${{ runner.os }}-${{ github.ref_name }}.tar.gz" -C dist dota2_tui
+          rm -f dist/dota2_tui
+      - name: Package (windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item target/release/dota2_tui.exe dist/
+          Compress-Archive -Path dist/dota2_tui.exe -DestinationPath "dist/dota2_tui-${{ runner.os }}-${{ github.ref_name }}.zip" -Force
+          Remove-Item dist/dota2_tui.exe
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: dota2_tui-${{ matrix.os }}
           path: dist/*
+
+  release-publish:
+    name: publish release
+    runs-on: ubuntu-latest
+    needs: release
+    if: github.ref_type == 'tag'
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: dist/**/*
+          generate_release_notes: true
