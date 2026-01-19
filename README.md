@@ -100,6 +100,13 @@ ps -o pid,rss,command -p $(pgrep -f dota2_tui)
 
 These tools help verify that image caches and network requests are not leaking over time.
 
+## TODO
+
+- Fix UI block sizing issues (panels overflowing or clipping).
+- Resolve avatar overlap in all panels and tables.
+- Improve overall UI layout, spacing, and visual hierarchy.
+- Add smoother animations and interaction polish.
+
 ### Recent searches
 
 Recent searches are appended to `recent.jsonl` in the config directory. The UI shows the latest 5 entries.

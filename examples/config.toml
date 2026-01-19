@@ -1,0 +1,31 @@
+[theme]
+name = "catppuccin"
+
+[keybinds]
+search = "/"
+quit = "q"
+up = "k"
+down = "j"
+select = "Enter"
+top = "g"
+bottom = "G"
+clear_input = "Ctrl+u"
+tab_next = "Right"
+tab_prev = "Left"
+help = "?"
+
+[api]
+base_url = "https://api.opendota.com/api"
+rate_limit_per_minute = 60
+cache_ttl_secs = 300
+cache_max_entries = 256
+max_inflight = 6
+log_requests = true
+
+[images]
+enabled = true
+protocol = "auto"                                   # auto|kitty|iterm2|none
+cdn_base = "https://cdn.cloudflare.steamstatic.com"
+
+[ui]
+language = "zh-CN" # en|zh-CN
