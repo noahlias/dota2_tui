@@ -24,6 +24,12 @@ cargo build
 cargo run
 ```
 
+## Release Build
+
+```bash
+cargo build --release
+```
+
 ## CI
 
 GitHub Actions builds on Linux/macOS/Windows for every push and PR.
