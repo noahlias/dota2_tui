@@ -6,6 +6,9 @@ on:
       - "v*"
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: build (${{ matrix.os }})
